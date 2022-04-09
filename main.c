@@ -36,12 +36,12 @@ int convertidor(void); // convertidor de hexadecimal a decimal
 char tabla [10] = {0x3f, 0x06, 0x5b, 0x4f, 0x66, 0x6d, 0x7d, 0x07, 0x7f, 0x67};
 
 // VARIABLES
-int banderas;
-int unidades;
-int decenas;
-int centenas;
-int residuo;
-int numero;
+int banderas; // NOS PERMITE SELECCIONAR EL DISPLAY A PRENDER
+int unidades; // VARIABLE EN DONDE SE GUARDA EL VALOR DE UNIDADES HEXADECIMAL -> DECIMAL
+int decenas; // VARIABLE EN DONDE SE GUARDA EL VALOR DE DECENAS HEXADECIMAL -> DECIMAL
+int centenas; // VARIABLE EN DONDE SE GUARDA EL VALOR DE CENTENAS HEXADECIMAL -> DECIMAL
+int residuo; // RESIDUO DE LA DIVISION
+int numero; // VALOR DEL PUERTO A 
 
 
 void __interrupt() isr(void){
@@ -53,11 +53,11 @@ void __interrupt() isr(void){
         INTCONbits.T0IF = 0;
         
         if (banderas == 0){
-            PORTDbits.RD0 = 1;
+            PORTDbits.RD0 = 1;          
             PORTDbits.RD1 = 0;
             PORTDbits.RD2 = 0;
             
-            PORTC = tabla[centenas];
+            PORTC = tabla[centenas]; //pasamos la posicion a mostrar al puerto c
             banderas = 1;
         }
         
@@ -66,7 +66,7 @@ void __interrupt() isr(void){
             PORTDbits.RD1 = 1;
             PORTDbits.RD2 = 0;
             
-            PORTC = tabla[decenas];
+            PORTC = tabla[decenas]; //pasamos la posicion a mostrar al puerto c
             banderas = 2;
         }
         
@@ -75,7 +75,7 @@ void __interrupt() isr(void){
             PORTDbits.RD1 = 0;
             PORTDbits.RD2 = 1;
             
-            PORTC = tabla[unidades];
+            PORTC = tabla[unidades]; //pasamos la posicion a mostrar al puerto c
             banderas = 0;
         }
         
@@ -135,7 +135,7 @@ void setup(void){
     OPTION_REGbits.PS1 = 1;
     OPTION_REGbits.PS2 = 1;
     OPTION_REGbits.T0CS = 0;
-    TMR0 = 207;
+    TMR0 = _tmr0_value;
     
     
     // CONFIGURACION DEL PUERTO B
